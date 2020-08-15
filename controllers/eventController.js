@@ -31,7 +31,7 @@ const makeDeposit = (event_received, res) => {
   }
 
   acc.balance += amount;
-  event.add(event);
+  event.add(event_received);
 
   const retorno = {
     destination: { id: destination, balance: acc.balance },

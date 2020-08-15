@@ -27,3 +27,14 @@ describe('POST /event {"type":"deposit", "destination":"100", "amount":10}', () 
     expect(response.body).toEqual(res);
   });
 });
+
+describe('POST /event {"type":"deposit", "destination":"100", "amount":10}', () => {
+  it('Deposit into existing account', async () => {
+    const req = { type: 'deposit', destination: '100', amount: 10 };
+    const res = { destination: { id: '100', balance: 20 } };
+
+    const response = await request(url).post('/event').send(req);
+    expect(response.statusCode).toEqual(201);
+    expect(response.body).toEqual(res);
+  });
+});

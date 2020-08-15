@@ -1,5 +1,5 @@
 function getAccountById(id) {
-  return global.db.accounts.find((account) => account.account_id === id);
+  return global.db.accounts.find((account) => account.id === id);
 }
 
 function createAccount(id) {
