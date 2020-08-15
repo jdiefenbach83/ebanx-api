@@ -7,8 +7,8 @@ global.db = {
 };
 
 const app = express();
+app.use(express.json());
 
 app.use('/api', apiRouter);
-app.use(express.json());
 
 export default app;
