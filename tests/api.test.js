@@ -16,3 +16,14 @@ describe('GET /balance?account_id=1234', () => {
     expect(response.body).toEqual({});
   });
 });
+
+describe('POST /event {"type":"deposit", "destination":"100", "amount":10}', () => {
+  it('Create account with initial balance', async () => {
+    const req = { type: 'deposit', destination: '100', amount: 10 };
+    const res = { destination: { id: '100', balance: 10 } };
+
+    const response = await request(url).post('/event').send(req);
+    expect(response.statusCode).toEqual(201);
+    expect(response.body).toEqual(res);
+  });
+});

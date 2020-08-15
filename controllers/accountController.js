@@ -1,4 +1,4 @@
-import getAccountById from '../models/account.js';
+import account from '../models/account.js';
 
 const getBalance = (req, res) => {
   const query = req.query;
@@ -8,9 +8,9 @@ const getBalance = (req, res) => {
       message: 'You should send an "account_id" parameter to get the balance',
     });
   } else {
-    const account = getAccountById(query.account_id);
+    const acc = account.getAccountById(query.account_id);
 
-    if (!!!account) {
+    if (!!!acc) {
       res.status(404).end();
     }
   }
