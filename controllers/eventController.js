@@ -50,6 +50,15 @@ const makeWithdraw = (event_received, res) => {
 
   if (!!!acc) {
     res.status(404).send('0');
+  } else {
+    acc.balance -= amount;
+    event.add(event_received);
+
+    const retorno = {
+      origin: { id: origin, balance: acc.balance },
+    };
+
+    res.status(201).send(retorno);
   }
 };
 
