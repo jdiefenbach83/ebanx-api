@@ -68,6 +68,25 @@ describe('POST /event {"type":"withdraw", "origin":"100", "amount":5}', () => {
   });
 });
 
+describe('POST /event {"type":"transfer", "origin":"100", "amount":15, "destination":"300"}', () => {
+  it('Transfer from existing account', async () => {
+    const req = {
+      type: 'transfer',
+      origin: '100',
+      amount: 15,
+      destination: '300',
+    };
+    const res = {
+      origin: { id: '100', balance: 0 },
+      destination: { id: '300', balance: 15 },
+    };
+
+    const response = await request(url).post('/event').send(req);
+    expect(response.statusCode).toEqual(201);
+    expect(response.body).toEqual(res);
+  });
+});
+
 describe('POST /event {"type":"transfer", "origin":"200", "amount":15, "destination":"300"}', () => {
   it('Transfer from non-existing account', async () => {
     const req = {

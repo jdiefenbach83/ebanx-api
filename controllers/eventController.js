@@ -66,12 +66,28 @@ const makeWithdraw = (event_received, res) => {
 };
 
 const makeTransfer = (event_received, res) => {
-  const { origin } = event_received;
+  const { origin, destination, amount } = event_received;
 
-  let acc = account.getAccountById(origin);
+  let origin_acc = account.getAccountById(origin);
+  let destination_acc = account.getAccountById(destination);
 
-  if (!!!acc) {
+  if (!!!origin_acc) {
     res.status(404).send('0');
+  } else {
+    if (!!!destination_acc) {
+      destination_acc = account.createAccount(destination);
+    }
+
+    origin_acc.balance -= amount;
+    destination_acc.balance += amount;
+    event.add(event_received);
+
+    const retorno = {
+      origin: { id: origin, balance: origin_acc.balance },
+      destination: { id: destination, balance: destination_acc.balance },
+    };
+
+    res.status(201).send(retorno);
   }
 };
 
