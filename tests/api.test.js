@@ -46,3 +46,13 @@ describe('GET /balance?account_id=100', () => {
     expect(response.text).toEqual('20');
   });
 });
+
+describe('POST /event {"type":"withdraw", "origin":"200", "amount":10}', () => {
+  it('Withdraw from non-existing account', async () => {
+    const req = { type: 'withdraw', origin: '200', amount: 10 };
+
+    const response = await request(url).post('/event').send(req);
+    expect(response.statusCode).toEqual(404);
+    expect(response.text).toEqual('0');
+  });
+});
