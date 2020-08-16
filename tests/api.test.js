@@ -13,7 +13,7 @@ describe('GET /balance?account_id=1234', () => {
   it('Get balance for non-existing account', async () => {
     const response = await request(url).get('/balance?account_id=1234');
     expect(response.statusCode).toEqual(404);
-    expect(response.body).toEqual({});
+    expect(response.text).toEqual('0');
   });
 });
 
@@ -36,5 +36,13 @@ describe('POST /event {"type":"deposit", "destination":"100", "amount":10}', () 
     const response = await request(url).post('/event').send(req);
     expect(response.statusCode).toEqual(201);
     expect(response.body).toEqual(res);
+  });
+});
+
+describe('GET /balance?account_id=100', () => {
+  it('Get balance for existing account', async () => {
+    const response = await request(url).get('/balance?account_id=100');
+    expect(response.statusCode).toEqual(200);
+    expect(response.text).toEqual('20');
   });
 });

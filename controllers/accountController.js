@@ -11,7 +11,9 @@ const getBalance = (req, res) => {
     const acc = account.getAccountById(query.account_id);
 
     if (!!!acc) {
-      res.status(404).end();
+      res.status(404).send('0');
+    } else {
+      res.status(200).send(`${acc.balance}`);
     }
   }
 };
