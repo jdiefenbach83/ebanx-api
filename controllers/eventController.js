@@ -30,64 +30,51 @@ function process(req, res) {
 const makeDeposit = (event_received, res) => {
   const { destination, amount } = event_received;
 
-  let acc = account.getAccountById(destination);
-
-  if (!!!acc) {
-    acc = account.createAccount(destination);
-  }
-
-  acc.balance += amount;
+  const retornMD = account.makeDeposit(destination, amount);
   event.add(event_received);
 
-  const retorno = {
-    destination: { id: destination, balance: acc.balance },
-  };
-
-  res.status(201).send(retorno);
+  res.status(201).send({
+    destination: { id: destination, balance: retornMD.balance },
+  });
 };
 
 const makeWithdraw = (event_received, res) => {
   const { origin, amount } = event_received;
 
-  let acc = account.getAccountById(origin);
+  const returnMW = account.makeWithdraw(origin, amount);
 
-  if (!!!acc) {
+  if (!returnMW.validations) {
     res.status(404).send('0');
   } else {
-    acc.balance -= amount;
     event.add(event_received);
 
-    const retorno = {
-      origin: { id: origin, balance: acc.balance },
-    };
-
-    res.status(201).send(retorno);
+    res.status(201).send({
+      origin: { id: origin, balance: returnMW.balance },
+    });
   }
 };
 
 const makeTransfer = (event_received, res) => {
   const { origin, destination, amount } = event_received;
 
-  let origin_acc = account.getAccountById(origin);
-  let destination_acc = account.getAccountById(destination);
+  const returnMW = account.makeWithdraw(origin, amount);
 
-  if (!!!origin_acc) {
+  if (!returnMW.validations) {
     res.status(404).send('0');
   } else {
-    if (!!!destination_acc) {
-      destination_acc = account.createAccount(destination);
+    const returnMD = account.makeDeposit(destination, amount);
+    if (returnMD.validations) {
+      event.add(event_received);
+
+      const retorno = {
+        origin: { id: origin, balance: returnMW.balance },
+        destination: { id: destination, balance: returnMD.balance },
+      };
+
+      res.status(201).send(retorno);
+    } else {
+      res.status(500);
     }
-
-    origin_acc.balance -= amount;
-    destination_acc.balance += amount;
-    event.add(event_received);
-
-    const retorno = {
-      origin: { id: origin, balance: origin_acc.balance },
-      destination: { id: destination, balance: destination_acc.balance },
-    };
-
-    res.status(201).send(retorno);
   }
 };
 
