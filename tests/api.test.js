@@ -67,3 +67,18 @@ describe('POST /event {"type":"withdraw", "origin":"100", "amount":5}', () => {
     expect(response.body).toEqual(res);
   });
 });
+
+describe('POST /event {"type":"transfer", "origin":"200", "amount":15, "destination":"300"}', () => {
+  it('Transfer from non-existing account', async () => {
+    const req = {
+      type: 'transfer',
+      origin: '200',
+      amount: 15,
+      destination: '300',
+    };
+
+    const response = await request(url).post('/event').send(req);
+    expect(response.statusCode).toEqual(404);
+    expect(response.text).toEqual('0');
+  });
+});

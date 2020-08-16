@@ -16,6 +16,9 @@ function process(req, res) {
       case 'withdraw':
         makeWithdraw(body, res);
         break;
+      case 'transfer':
+        makeTransfer(body, res);
+        break;
       default:
         res.status(400).send({
           message: 'You should send a valid event type',
@@ -59,6 +62,16 @@ const makeWithdraw = (event_received, res) => {
     };
 
     res.status(201).send(retorno);
+  }
+};
+
+const makeTransfer = (event_received, res) => {
+  const { origin } = event_received;
+
+  let acc = account.getAccountById(origin);
+
+  if (!!!acc) {
+    res.status(404).send('0');
   }
 };
 
