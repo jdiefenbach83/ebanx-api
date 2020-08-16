@@ -10,7 +10,7 @@ router.post('/reset', (_, res) => {
     events: [],
   };
 
-  res.status(200).end();
+  res.status(200).end('OK');
 });
 
 router.get('/balance', getBalance);
