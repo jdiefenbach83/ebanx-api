@@ -30,12 +30,12 @@ const getBalance = (accountToGet) => {
   }
 };
 
-function makeDeposit(destination_id, amount) {
+function makeDeposit(destination, amount) {
   let validations = false;
-  let account = getAccountById(destination_id);
+  let account = getAccountById(destination);
 
   if (!!!account) {
-    account = createAccount(destination_id);
+    account = createAccount(destination);
   }
 
   //fazer alguma validação
@@ -45,10 +45,10 @@ function makeDeposit(destination_id, amount) {
   return assembleMessage(validations, { balance: account.balance });
 }
 
-const makeWithdraw = (origin_id, amount) => {
+const makeWithdraw = (origin, amount) => {
   let validations = false;
   let balance = 0;
-  let account = getAccountById(origin_id);
+  let account = getAccountById(origin);
 
   if (!!account) {
     balance = account.balance -= amount;
@@ -59,6 +59,28 @@ const makeWithdraw = (origin_id, amount) => {
   return assembleMessage(validations, { balance: balance });
 };
 
+const makeTransfer = (origin, destination, amount) => {
+  const originAccount = makeWithdraw(origin, amount);
+
+  if (!originAccount.success) {
+    return assembleMessage(false, originAccount.message);
+  }
+
+  const destinationAccount = makeDeposit(destination, amount);
+
+  if (!destinationAccount.success) {
+    return assembleMessage(false, destinationAccount.message);
+  }
+
+  return assembleMessage(true, {
+    origin: { id: origin, balance: originAccount.message.balance },
+    destination: {
+      id: destination,
+      balance: destinationAccount.message.balance,
+    },
+  });
+};
+
 const getAccountById = (id) => {
   return account.getAccountById(id);
 };
@@ -67,4 +89,9 @@ const createAccount = (id) => {
   return account.createAccount(id);
 };
 
-export default { getBalance, makeDeposit, makeWithdraw, getAccountById };
+export default {
+  getBalance,
+  makeDeposit,
+  makeWithdraw,
+  makeTransfer,
+};
