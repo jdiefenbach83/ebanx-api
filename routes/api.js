@@ -1,14 +1,12 @@
 import express from 'express';
+import db from '../database/db.js';
 import getBalance from '../controllers/accountController.js';
 import eventController from '../controllers/eventController.js';
 
 const router = express.Router();
 
 router.post('/reset', (_, res) => {
-  global.db = {
-    accounts: [],
-    events: [],
-  };
+  db.reset();
 
   res.status(200).end('OK');
 });
