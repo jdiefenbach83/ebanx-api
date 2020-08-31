@@ -4,6 +4,8 @@
   "description": "An API for Ebanx test app",
   "main": "server.js",
   "scripts": {
+    "start": "node server.js",
+    "start-dev": "nodemon server.js",
     "test": "jest"
   },
   "author": "Jefferson Diefenbach",
@@ -13,6 +15,7 @@
   },
   "devDependencies": {
     "jest": "^26.4.0",
+    "nodemon": "^2.0.4",
     "supertest": "^4.0.2"
   },
   "type": "module"

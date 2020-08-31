@@ -1,20 +1,16 @@
-import account from '../models/account.js';
+import accountService from '../services/accountService.js';
 
-const getBalance = (req, res) => {
-  const query = req.query;
+const getBalance = async (req, res) => {
+  try {
+    const result = accountService.getBalance(req.query);
 
-  if (Object.keys(query).length === 0 || !!!query.account_id) {
-    res.status(400).send({
-      message: 'You should send an "account_id" parameter to get the balance',
-    });
-  } else {
-    const acc = account.getAccountById(query.account_id);
-
-    if (!!!acc) {
-      res.status(404).send('0');
-    } else {
-      res.status(200).send(`${acc.balance}`);
+    if (!!!result.success) {
+      return res.status(404).send(result.message);
     }
+
+    return res.status(200).send(result.message);
+  } catch (error) {
+    return res.status(500).send({ message: error });
   }
 };
 
