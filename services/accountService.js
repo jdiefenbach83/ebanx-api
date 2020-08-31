@@ -18,7 +18,7 @@ const getBalance = (accountToGet) => {
       );
     }
 
-    const acc = getAccountById(account_id);
+    const acc = account.getAccountById(account_id);
 
     if (!!!acc) {
       return assembleMessage(false, '0');
@@ -32,27 +32,27 @@ const getBalance = (accountToGet) => {
 
 function makeDeposit(destination, amount) {
   let validations = false;
-  let account = getAccountById(destination);
+  let acc = account.getAccountById(destination);
 
-  if (!!!account) {
-    account = createAccount(destination);
+  if (!!!acc) {
+    acc = account.createAccount(destination);
   }
 
   //fazer alguma validação
-  account.balance += amount;
+  acc.balance += amount;
   validations = true;
 
-  return assembleMessage(validations, { balance: account.balance });
+  return assembleMessage(validations, { balance: acc.balance });
 }
 
 const makeWithdraw = (origin, amount) => {
   let validations = false;
   let balance = 0;
-  let account = getAccountById(origin);
+  let acc = account.getAccountById(origin);
 
-  if (!!account) {
-    balance = account.balance -= amount;
-    account.balance = balance;
+  if (!!acc) {
+    balance = acc.balance -= amount;
+    acc.balance = balance;
     validations = true;
   }
 
@@ -79,14 +79,6 @@ const makeTransfer = (origin, destination, amount) => {
       balance: destinationAccount.message.balance,
     },
   });
-};
-
-const getAccountById = (id) => {
-  return account.getAccountById(id);
-};
-
-const createAccount = (id) => {
-  return account.createAccount(id);
 };
 
 export default {
